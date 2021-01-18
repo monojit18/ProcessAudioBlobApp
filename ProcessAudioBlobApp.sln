@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.808.5
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProcessAudioBlobApp", "ProcessAudioBlobApp\ProcessAudioBlobApp.csproj", "{5381ADD8-D18F-4025-A393-4BD20994B255}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5381ADD8-D18F-4025-A393-4BD20994B255}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5381ADD8-D18F-4025-A393-4BD20994B255}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5381ADD8-D18F-4025-A393-4BD20994B255}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5381ADD8-D18F-4025-A393-4BD20994B255}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F661E17A-AC66-4F49-80AD-CFFD49C18FDE}
+	EndGlobalSection
+EndGlobal
