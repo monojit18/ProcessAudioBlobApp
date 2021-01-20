@@ -1,0 +1,19 @@
+{
+    "IsEncrypted": false,
+    "Values": {
+        "AzureWebJobsStorage": "<AzureWebJobsStorage>",
+        "BATCH_BLOB_CLIENT": "<BATCH_BLOB_CLIENT_CONN_STRING",
+        "FUNCTIONS_WORKER_RUNTIME": "dotnet",
+        "CREATE_TRANSCRIPT_URL": "https://eastus.api.cognitive.microsoft.com/speechtotext/v3.0/transcriptions",
+        "GET_TRANSCRIPT_URL": "https://eastus.api.cognitive.microsoft.com/speechtotext/v3.0/transcriptions/{0}/files",
+        "PROCESS_TRANSCRIPT_URL": "http://localhost:7071/api/SaveAudioTranscript",
+        "Ocp-Apim-Subscription-Key": "<Ocp-Apim-Subscription-Key>",
+        "First_Retry_Interval": 10,
+        "Retry_TimeOut": 2,
+        "Max_Number_Of_Attempts": 3,
+        "Back_Off_Attempts": 2.0,
+        "AUDIO_BLOB_DB_CONN_STRING": "<AUDIO_BLOB_DB_CONN_STRING>",
+        "AUDIO_BLOB_DB_DATABASE_ID": "AudioBlobDBId",
+        "AUDIO_BLOB_DB_CONTAINER_ID": "AudioBlobContainerId"
+    }
+}
