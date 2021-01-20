@@ -108,6 +108,28 @@ namespace ProcessAudioBlobApp
 
         }
 
+        private static async Task<List<TranscriptModel>>
+                             RetrieveTranscriptFilesAsync(string transcriptCodeString)
+        {
+
+            if (transcriptCodeString.Equals(string.Empty) == true)
+                return null;
+
+            var getTranscriptURLString = Environment.GetEnvironmentVariable("GET_TRANSCRIPT_URL");
+            getTranscriptURLString = string.Format(getTranscriptURLString, transcriptCodeString);
+
+            var apiKeyString = Environment.GetEnvironmentVariable("Ocp-Apim-Subscription-Key");
+            kHttpClient.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", apiKeyString);
+
+            var getTranscriptFilesResponse = await kHttpClient.GetAsync(getTranscriptURLString);
+            var transcriptFileModelsString = await getTranscriptFilesResponse.Content.ReadAsStringAsync();
+            var transcriptFileModels = JsonConvert.DeserializeObject<TranscriptModels>
+                                                   (transcriptFileModelsString);
+            var transcriptFilesList = transcriptFileModels.Transcripts;
+            return transcriptFilesList;
+
+        }
+
         [FunctionName("ProcessTranscriptFiles")]
         public static async Task ProcessTranscriptFilesAsync(
                                  [ActivityTrigger] TranscriptModels transcriptModels)
@@ -154,28 +176,6 @@ namespace ProcessAudioBlobApp
             var retryOptions = GetRetryOptions();
             await context.CallActivityWithRetryAsync("ProcessTranscriptFiles", retryOptions,
                                                      transcriptModels);
-
-        }
-
-        public static async Task<List<TranscriptModel>>
-                            RetrieveTranscriptFilesAsync(string transcriptCodeString)
-        {
-
-            if (transcriptCodeString.Equals(string.Empty) == true)
-                return null;
-
-            var getTranscriptURLString = Environment.GetEnvironmentVariable("GET_TRANSCRIPT_URL");
-            getTranscriptURLString = string.Format(getTranscriptURLString, transcriptCodeString);
-
-            var apiKeyString = Environment.GetEnvironmentVariable("Ocp-Apim-Subscription-Key");
-            kHttpClient.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", apiKeyString);
-
-            var getTranscriptFilesResponse = await kHttpClient.GetAsync(getTranscriptURLString);
-            var transcriptFileModelsString = await getTranscriptFilesResponse.Content.ReadAsStringAsync();
-            var transcriptFileModels = JsonConvert.DeserializeObject<TranscriptModels>
-                                                   (transcriptFileModelsString);
-            var transcriptFilesList = transcriptFileModels.Transcripts;
-            return transcriptFilesList;
 
         }    
 
