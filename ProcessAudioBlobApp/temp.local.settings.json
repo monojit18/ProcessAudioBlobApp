@@ -13,7 +13,7 @@
         "Max_Number_Of_Attempts": 3,
         "Back_Off_Attempts": 2.0,
         "AUDIO_BLOB_DB_CONN_STRING": "<AUDIO_BLOB_DB_CONN_STRING>",
-        "AUDIO_BLOB_DB_DATABASE_ID": "AudioBlobDBId",
-        "AUDIO_BLOB_DB_CONTAINER_ID": "AudioBlobContainerId"
+        "AUDIO_BLOB_DB_DATABASE_ID": "<DATABASE_ID>",
+        "AUDIO_BLOB_DB_CONTAINER_ID": "<CONTAINER_ID>"
     }
 }

@@ -177,7 +177,7 @@ namespace ProcessAudioBlobApp
             await context.CallActivityWithRetryAsync("ProcessTranscriptFiles", retryOptions,
                                                      transcriptModels);
 
-        }    
+        }
 
         [FunctionName("RetrieveAllTranscriptFiles")]
         public static async Task<List<TranscriptModel>> RetrieveAllTranscriptFilesAsync(
@@ -383,7 +383,7 @@ namespace ProcessAudioBlobApp
                                                             audioModelsList);
             logger.LogInformation($"Started orchestration with ID = '{instanceId}'.");
 
-            return new OkObjectResult("") { StatusCode = 200 };
+            return new OkObjectResult("OK") { StatusCode = 200 };
 
         }
 
