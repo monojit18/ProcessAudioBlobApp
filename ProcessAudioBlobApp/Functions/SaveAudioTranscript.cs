@@ -11,6 +11,7 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Azure.WebJobs.Extensions.DurableTask;
+using Microsoft.Azure.Cosmos;
 using Newtonsoft.Json;
 using ProcessAudioBlobApp.Models;
 
@@ -19,6 +20,26 @@ namespace ProcessAudioBlobApp.Functions
     public static class SaveAudioTranscript
     {
         private static HttpClient kHttpClient = new HttpClient();
+        private static CosmosClient kCosmosClient = new CosmosClient(
+                                                    Environment.GetEnvironmentVariable
+                                                    ("AUDIO_BLOB_DB_CONN_STRING"));
+
+        private static async Task<HttpStatusCode> SaveTranscriptAsync(ProcessedModel processedModel)
+        {
+
+            if (processedModel == null)
+                return HttpStatusCode.BadRequest;
+
+            var databaseId = Environment.GetEnvironmentVariable("AUDIO_BLOB_DB_DATABASE_ID");
+            var containerId = Environment.GetEnvironmentVariable("AUDIO_BLOB_DB_CONTAINER_ID");
+
+            var container = kCosmosClient.GetContainer(databaseId, containerId);
+            var insertResponse = await container.CreateItemAsync(processedModel,
+                                                                 new PartitionKey
+                                                                 (processedModel.SourceId));
+            return (insertResponse.StatusCode);
+
+        }
 
         [FunctionName("SaveAudioTranscript")]
         public static async Task SaveAudioTranscriptAsync(
@@ -40,8 +61,13 @@ namespace ProcessAudioBlobApp.Functions
             {
 
                 var uri = transcriptModel.Links.ContentUrl;
-                var fileContent = await kHttpClient.GetStringAsync(uri);
-                logger.LogInformation(fileContent);
+                var fileContentString = await kHttpClient.GetStringAsync(uri);
+
+                var processedModel = JsonConvert.DeserializeObject<ProcessedModel>(fileContentString);
+                processedModel.SourceId = Guid.NewGuid().ToString();
+
+                var responseCode = await SaveTranscriptAsync(processedModel);
+                logger.LogInformation(responseCode.ToString());
 
             }).ToList();
 

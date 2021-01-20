@@ -35,4 +35,12 @@ namespace ProcessAudioBlobApp.Models
         public string ContentUrl { get; set; }       
 
     }
+
+    public class TranscriptCodeModel
+    {
+
+        public string InstanceId { get; set; }
+        public string TranscriptCode { get; set; }
+
+    }
 }
