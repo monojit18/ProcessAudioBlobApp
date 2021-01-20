@@ -531,17 +531,17 @@ public static async Task SaveAudioTranscriptAsync(
 
 1. Audio is uploaded in the Blob
 
-2. The Event Grid subscription to the Send Files logic app is triggered
+2. The Event Grid subscription to the *Send Files* logic app is triggered
 
-3. Send Files Logic App keeps on receiving each new audio file added to Blob
+3. *Send Files* Logic App keeps on receiving each new audio file added to Blob
 
-4. It then sends this to Receive Files logic app - each file one by one
+4. It then sends this to *Receive Files* logic app - each file one by one
 
-5. Receive Files logic app can be configured to form a batch of files - by the *MessageCount* property
+5. *Receive Files* logic app can be configured to form a batch of files - by the *MessageCount* property
 
 6. Once the *MessageCount* property reaches a particular value, a batch is formed and moves to next step for further processing (7)
 
-7. It then send the batched data to a the Durable function - BatchAudioTranscriptStart and frothier onward entire flow remains same as the **Approach 1**
+7. It then send the batched data to a the Durable function - *BatchAudioTranscriptStart* and from their onward entire flow remains same as the **Approach 1**
 
    
 
