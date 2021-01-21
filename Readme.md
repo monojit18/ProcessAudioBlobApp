@@ -1,3 +1,7 @@
+
+
+<img src="/Users/monojitd/Materials/Projects/ServerlessProjects/GITHUBProjects/ProcessAudioBlobApp/Assets/BatchTranscript-Combined.png" style="zoom:100%;" />
+
 # ProcessAudioBlobApp
 
 The purpose of this document is to provide an idea on how to implement an automated *Batch Transcript* process workflow for various Audio files using Azure Durable Function and/or Logic App.
@@ -621,4 +625,64 @@ public static async Task BatchAndProcessTranscriptAsync([OrchestrationTrigger]
 
 
 
-=================================X======================================
+## Logic Apps
+
+### Sender Logic App
+
+1. #### Subscribes to Event Grid topic coming from *Blob Create* trigger
+
+![](/Users/monojitd/Materials/Projects/ServerlessProjects/GITHUBProjects/ProcessAudioBlobApp/Assets/LogicApp-Sender-1.png)
+
+
+
+#### 2. Receives Blob audio file metadata
+
+![](/Users/monojitd/Materials/Projects/ServerlessProjects/GITHUBProjects/ProcessAudioBlobApp/Assets/LogicApp-Sender-2.png)
+
+
+
+#### 3. Send that to another Logic App to Batch the set of audio blobs
+
+![](/Users/monojitd/Materials/Projects/ServerlessProjects/GITHUBProjects/ProcessAudioBlobApp/Assets/LogicApp-Sender-3.png)
+
+
+
+### Receiver Logic App
+
+![](/Users/monojitd/Materials/Projects/ServerlessProjects/GITHUBProjects/ProcessAudioBlobApp/Assets/LogicApp-Receiver-1.png)
+
+
+
+1. #### Receive Audio files from Blob from Sender Logic App; MessageCount decides the Batch count of Audio files; i.e. when this action would release the batch for further processing to the next steps
+
+![](/Users/monojitd/Materials/Projects/ServerlessProjects/GITHUBProjects/ProcessAudioBlobApp/Assets/LogicApp-Receiver-2.png)
+
+
+
+2. #### Initialise a *String* variable to hold value of each of the Blob URIs of the batch
+
+![](/Users/monojitd/Materials/Projects/ServerlessProjects/GITHUBProjects/ProcessAudioBlobApp/Assets/LogicApp-Receiver-3.png)
+
+
+
+3. #### Initialise an *Array* variable to hold value of list of the Blob URIs and forms a Batch which can be sent to *Speech-To-Text* API
+
+![](/Users/monojitd/Materials/Projects/ServerlessProjects/GITHUBProjects/ProcessAudioBlobApp/Assets/LogicApp-Receiver-4.png)
+
+
+
+4. #### Loop through each item in the Batch, Parse the Json metadata and saves it in an Array Variable - this would be the final Batch List variable containing all Blob URIs to be processed
+
+![](/Users/monojitd/Materials/Projects/ServerlessProjects/GITHUBProjects/ProcessAudioBlobApp/Assets/LogicApp-Receiver-5.png)
+
+![](/Users/monojitd/Materials/Projects/ServerlessProjects/GITHUBProjects/ProcessAudioBlobApp/Assets/LogicApp-Receiver-6.png)
+
+
+
+5. #### Sends the list of Blob URIs to the Azure function from ***Approach 1***
+
+![](/Users/monojitd/Materials/Projects/ServerlessProjects/GITHUBProjects/ProcessAudioBlobApp/Assets/LogicApp-Receiver-7.png)
+
+​								
+
+​									=================================X======================================
