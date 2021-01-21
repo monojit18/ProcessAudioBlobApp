@@ -547,7 +547,7 @@ public static async Task SaveAudioTranscriptAsync(
 
 #### BatchAudioTranscriptStart
 
-This accepts the 
+This accepts the batch of file uris and then starts the process of creating and processing the transcript
 
 ```C#
 [FunctionName("BatchAudioTranscriptStart")]
@@ -559,31 +559,31 @@ public static async Task<IActionResult> BatchAudioTranscriptStartAsync(
   ILogger logger)
 {
 
-  var body = await request.Content.ReadAsStringAsync();
-  logger.LogInformation(body);
+    var body = await request.Content.ReadAsStringAsync();
+    logger.LogInformation(body);
 
-  var batchURIs = JsonConvert.DeserializeObject<List<string>>(body);            
-  if ((batchURIs == null) || (batchURIs.Count == 0))
-    return new BadRequestObjectResult("Bad Request") { StatusCode = 400 };
+    var batchURIs = JsonConvert.DeserializeObject<List<string>>(body);            
+    if ((batchURIs == null) || (batchURIs.Count == 0))
+      return new BadRequestObjectResult("Bad Request") { StatusCode = 400 };
 
-  var audioModelsList = new List<AudioModel>();
-  batchURIs.ForEach((string batchURIString) =>
-  {
-
-    var tokensArray = batchURIString.Split("/");
-    var fileNameString = tokensArray[tokensArray.Length - 1];
-    var containerNameString = tokensArray[tokensArray.Length - 2];
-
-    var audioModel = new AudioModel()
+    var audioModelsList = new List<AudioModel>();
+    batchURIs.ForEach((string batchURIString) =>
     {
-      AudioUri = batchURIString,
-      AudioName = fileNameString,
-      ContainerName = containerNameString,
-      IsBatch = true
 
-    };
+      var tokensArray = batchURIString.Split("/");
+      var fileNameString = tokensArray[tokensArray.Length - 1];
+      var containerNameString = tokensArray[tokensArray.Length - 2];
 
-    audioModelsList.Add(audioModel);
+      var audioModel = new AudioModel()
+      {
+        AudioUri = batchURIString,
+        AudioName = fileNameString,
+        ContainerName = containerNameString,
+        IsBatch = true
+
+      };
+
+      audioModelsList.Add(audioModel);
 
   });
   
