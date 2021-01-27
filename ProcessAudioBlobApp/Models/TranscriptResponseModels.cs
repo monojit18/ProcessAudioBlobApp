@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace ProcessAudioBlobApp.Models
 {
-    public class TranscriptModels
+    public class TranscriptResponseModels
     {
 
         public string InstanceId { get; set; }

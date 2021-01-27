@@ -52,11 +52,12 @@ namespace ProcessAudioBlobApp.Functions
             if (body == null)
                 new BadRequestObjectResult("Bad Request") { StatusCode = 400 };
 
-            var transcriptModels = JsonConvert.DeserializeObject<TranscriptModels>(body);
-            if (transcriptModels == null)
+            var transcriptResponseModels = JsonConvert
+                                           .DeserializeObject<TranscriptResponseModels>(body);
+            if (transcriptResponseModels == null)
                 new BadRequestObjectResult("Bad Request") { StatusCode = 400 };
 
-            var transcriptFilesList = transcriptModels.Transcripts;
+            var transcriptFilesList = transcriptResponseModels.Transcripts;
             var taskList = transcriptFilesList.Select(async (TranscriptModel transcriptModel) =>
             {
 
@@ -72,7 +73,7 @@ namespace ProcessAudioBlobApp.Functions
             }).ToList();
 
             await Task.WhenAll(taskList);
-            await client.RaiseEventAsync(transcriptModels.InstanceId, "Processed", true);
+            await client.RaiseEventAsync(transcriptResponseModels.InstanceId, "Processed", true);
             
         }
     }

@@ -1,8 +1,8 @@
-{
+﻿{
     "IsEncrypted": false,
     "Values": {
         "AzureWebJobsStorage": "<AzureWebJobsStorage>",
-        "BATCH_BLOB_CLIENT": "<BATCH_BLOB_CLIENT_CONN_STRING",
+        "BATCH_BLOB_STORAGE": "<BATCH_BLOB_CLIENT_CONN_STRING",
         "FUNCTIONS_WORKER_RUNTIME": "dotnet",
         "CREATE_TRANSCRIPT_URL": "https://eastus.api.cognitive.microsoft.com/speechtotext/v3.0/transcriptions",
         "GET_TRANSCRIPT_URL": "https://eastus.api.cognitive.microsoft.com/speechtotext/v3.0/transcriptions/{0}/files",

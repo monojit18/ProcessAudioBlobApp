@@ -29,7 +29,7 @@ namespace ProcessAudioBlobApp
                                                           .CreateCloudBlobClient();
 
         private static CloudStorageAccount kCloudBatchStorageAccount =
-            CloudStorageAccount.Parse(Environment.GetEnvironmentVariable("BATCH_BLOB_CLIENT"));
+            CloudStorageAccount.Parse(Environment.GetEnvironmentVariable("BATCH_BLOB_STORAGE"));
         private static CloudBlobClient kCloudBatchBlobClient = kCloudBatchStorageAccount
                                                                .CreateCloudBlobClient();
 
@@ -123,7 +123,7 @@ namespace ProcessAudioBlobApp
 
             var getTranscriptFilesResponse = await kHttpClient.GetAsync(getTranscriptURLString);
             var transcriptFileModelsString = await getTranscriptFilesResponse.Content.ReadAsStringAsync();
-            var transcriptFileModels = JsonConvert.DeserializeObject<TranscriptModels>
+            var transcriptFileModels = JsonConvert.DeserializeObject<TranscriptResponseModels>
                                                    (transcriptFileModelsString);
             var transcriptFilesList = transcriptFileModels.Transcripts;
             return transcriptFilesList;
@@ -132,13 +132,14 @@ namespace ProcessAudioBlobApp
 
         [FunctionName("ProcessTranscriptFiles")]
         public static async Task ProcessTranscriptFilesAsync(
-                                 [ActivityTrigger] TranscriptModels transcriptModels)
+                                 [ActivityTrigger]
+                                 TranscriptResponseModels transcriptResponseModels)
         {
 
-            if (transcriptModels == null)
+            if (transcriptResponseModels == null)
                 return;
 
-            var transcriptFilesList = transcriptModels.Transcripts;
+            var transcriptFilesList = transcriptResponseModels.Transcripts;
             if (transcriptFilesList.Count <= 1)
                 return;
 
@@ -149,10 +150,10 @@ namespace ProcessAudioBlobApp
 
             }).ToList();
 
-            var processedModels = new TranscriptModels()
+            var processedModels = new TranscriptResponseModels()
             {
 
-                InstanceId = transcriptModels.InstanceId,
+                InstanceId = transcriptResponseModels.InstanceId,
                 Transcripts = processedFilesList
 
             };
@@ -172,10 +173,10 @@ namespace ProcessAudioBlobApp
                                  ILogger logger)
         {
 
-            var transcriptModels = context.GetInput<TranscriptModels>();
+            var transcriptResponseModels = context.GetInput<TranscriptResponseModels>();
             var retryOptions = GetRetryOptions();
             await context.CallActivityWithRetryAsync("ProcessTranscriptFiles", retryOptions,
-                                                     transcriptModels);
+                                                     transcriptResponseModels);
 
         }
 
@@ -285,7 +286,7 @@ namespace ProcessAudioBlobApp
             var transcriptsList = await context.CallSubOrchestratorAsync<List<TranscriptModel>>
                                                 ("GetTranscriptFiles", transcriptCodeModel);
 
-            var transcriptModels = new TranscriptModels()
+            var transcriptResponseModels = new TranscriptResponseModels()
             {
 
                 InstanceId = context.InstanceId,
@@ -293,7 +294,7 @@ namespace ProcessAudioBlobApp
 
             };
 
-            await context.CallSubOrchestratorAsync("ProcessAllTranscriptFiles", transcriptModels);
+            await context.CallSubOrchestratorAsync("ProcessAllTranscriptFiles", transcriptResponseModels);
             using (var cts = new CancellationTokenSource())
             {
 
